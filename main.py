@@ -2,13 +2,11 @@
 A module that consists of the program's main application logic
 """
 from manager import ContactManager
-from sender import SendManager
 from helpers import exits
+from dotenv import load_dotenv
 
 
-sender = SendManager()
 contact_book = ContactManager()
-
 controls = {
     "save": contact_book.save,
     "delete" : contact_book.delete,
@@ -16,8 +14,6 @@ controls = {
     "retrieve" : contact_book.show,
     "edit" : contact_book.update,
     "count" : contact_book.count_all,
-    "text" : sender.text,
-    "email" : sender.mail_to
 }
 
 
