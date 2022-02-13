@@ -22,8 +22,31 @@ proceed = True
 while proceed:
     action = input("CLI >> ")
     if action in controls:
-        execute = controls[action]
-        execute()
+        if action == "save":
+            name = input("Contact name: ")
+            email = input("Contact email: ")
+            execute = controls[action]
+            execute(name, email)
+        elif action == "delete":
+            name = input("Enter name of contact you want to delete: ")
+            execute = controls[action]
+            execute(name)
+        elif action == "display":
+            execute = controls[action]
+            execute()
+        elif action == "retrieve":
+            name = input("Enter name of contact you'd like to retrieve: ")
+            execute = controls[action]
+            execute(name)
+        elif action == "edit":
+            name = input("Enter name of contact you'd like to edit: ")
+            new_name = input("Set new name: ")
+            new_email = input("Set new email: ")
+            execute = controls[action]
+            execute(name, new_email, new_email)
+        elif action == "count":
+            execute = controls[action]
+            execute()
     elif action == "exit":
         proceed = exits(proceed)
     else:
