@@ -40,7 +40,7 @@ while proceed:
         elif action == "retrieve":
             name = input("Enter name of contact you'd like to retrieve: ")
             execute = controls[action]
-            execute(name)
+            execute(cursor, name)
         elif action == "edit":
             name = input("Enter name of contact you'd like to edit: ")
             new_name = input("Set new name: ")
