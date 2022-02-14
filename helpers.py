@@ -21,15 +21,16 @@ def create_db():
     conn.execute("""
     CREATE TABLE IF NOT EXISTS contacts(
     id INTEGER PRIMARY KEY,
-    name TEXT,
-    email TEXT)
+    name TEXT UNIQUE,
+    email TEXT UNIQUE)
     """)
     return conn
 
-def check_db(name):
+def check_db(conn, name):
     """
     check_db - checks if a particular name is present in the db
     Return: true if name is in db and false if not
     """
-    pass
+    conn.execute("""
+    """)
     
