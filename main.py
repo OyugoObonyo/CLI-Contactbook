@@ -2,7 +2,7 @@
 A module that consists of the program's main application logic
 """
 from manager import ContactManager
-from helpers import exits
+from helpers import exits, create_db
 from dotenv import load_dotenv
 
 
@@ -16,24 +16,26 @@ controls = {
     "count" : contact_book.count_all,
 }
 
+# create database connection object
+conn = create_db()
 
 proceed = True
 # contain program logic within a REPL loop
 while proceed:
-    action = input("CLI >> ")
+    action = input("CLI PHONEBOOK >> ")
     if action in controls:
         if action == "save":
             name = input("Contact name: ")
             email = input("Contact email: ")
             execute = controls[action]
-            execute(name, email)
+            execute(conn, name, email)
         elif action == "delete":
             name = input("Enter name of contact you want to delete: ")
             execute = controls[action]
             execute(name)
         elif action == "display":
             execute = controls[action]
-            execute()
+            execute(conn)
         elif action == "retrieve":
             name = input("Enter name of contact you'd like to retrieve: ")
             execute = controls[action]
@@ -48,6 +50,7 @@ while proceed:
             execute = controls[action]
             execute()
     elif action == "exit":
+        conn.close()
         proceed = exits(proceed)
     else:
         print("Please enter a valid command!")
