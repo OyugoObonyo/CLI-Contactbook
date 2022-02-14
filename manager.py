@@ -2,26 +2,28 @@
 A module that consists of the contact manager class
 """
 from helpers import create_db
+from tabulate import tabulate
 
-conn = create_db()
 
 class ContactManager:
     """
     A class that handles actions related to the contacts in the phonebook
     """
-    def save(self, name, email):
+    def save(self, conn, name, email):
         """
         save - saves a contact to the db
+        @conn: database conection object
         @contact: name of contact to be saved
         @email: email of contact to be saved
         """
         if name == "" or email == "":
             print("Name or email cannot be empty")
             return None
-        conn.execute("INSERT INTO contacts VALUES(?, ?)",(email, name))
-        print("number is saved!")
+        conn.execute("INSERT INTO contacts VALUES(NULL,?, ?)",(name, email))
+        conn.commit()
+        print(f"{name} has been added to your phonebook!")
 
-    def show(self, name):
+    def show(self, conn, name):
         """
         show - shows a particular contact detail
         @name: name of contact to be displayed
@@ -29,12 +31,13 @@ class ContactManager:
         print("Here is the number!")
 
 
-    def show_all(self):
+    def show_all(self, conn):
         """
         show_all - shows all the contacts in the database
+        @conn: db connection cursor
         """
-        #remember to include the table library
-        print("all numbers are shown man!")
+        contacts = conn.execute("SELECT * FROM contacts").fetchall()
+        print(tabulate(contacts, headers=["ContactID", "Name", "Email"]))
 
     def update(self, name, new_name, new_email):
         """
