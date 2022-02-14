@@ -18,6 +18,7 @@ controls = {
 
 # create database connection object
 conn = create_db()
+cursor = conn.cursor()
 
 proceed = True
 # contain program logic within a REPL loop
@@ -28,14 +29,14 @@ while proceed:
             name = input("Contact name: ")
             email = input("Contact email: ")
             execute = controls[action]
-            execute(conn, name, email)
+            execute(conn, cursor, name, email)
         elif action == "delete":
             name = input("Enter name of contact you want to delete: ")
             execute = controls[action]
             execute(name)
         elif action == "display":
             execute = controls[action]
-            execute(conn)
+            execute(cursor)
         elif action == "retrieve":
             name = input("Enter name of contact you'd like to retrieve: ")
             execute = controls[action]
@@ -48,7 +49,7 @@ while proceed:
             execute(name, new_email, new_email)
         elif action == "count":
             execute = controls[action]
-            execute()
+            execute(cursor)
     elif action == "exit":
         conn.close()
         proceed = exits(proceed)
