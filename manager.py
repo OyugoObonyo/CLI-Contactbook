@@ -1,6 +1,7 @@
 """
 A module that consists of the contact manager class
 """
+from itertools import count
 from helpers import create_db
 from tabulate import tabulate
 
@@ -9,17 +10,18 @@ class ContactManager:
     """
     A class that handles actions related to the contacts in the phonebook
     """
-    def save(self, conn, name, email):
+    def save(self, conn, cursor, name, email):
         """
         save - saves a contact to the db
         @conn: database conection object
+        @cursor: database cursor
         @contact: name of contact to be saved
         @email: email of contact to be saved
         """
         if name == "" or email == "":
             print("Name or email cannot be empty")
             return None
-        conn.execute("INSERT INTO contacts VALUES(NULL,?, ?)",(name, email))
+        cursor.execute("INSERT INTO contacts VALUES(NULL,?, ?)",(name, email))
         conn.commit()
         print(f"{name} has been added to your phonebook!")
 
@@ -30,13 +32,12 @@ class ContactManager:
         """
         print("Here is the number!")
 
-
-    def show_all(self, conn):
+    def show_all(self, cursor):
         """
         show_all - shows all the contacts in the database
         @conn: db connection cursor
         """
-        contacts = conn.execute("SELECT * FROM contacts").fetchall()
+        contacts = cursor.execute("SELECT * FROM contacts").fetchall()
         print(tabulate(contacts, headers=["ContactID", "Name", "Email"]))
 
     def update(self, name, new_name, new_email):
@@ -48,11 +49,13 @@ class ContactManager:
         """
         print("number is updated!")
 
-    def count_all(self):
+    def count_all(self, cursor):
         """
         shows the total count of contacts within the phonebook
+        @cursor: database cursor
         """
-        print("50")
+        count = cursor.execute("SELECT COUNT(*) FROM contacts").fetchone()
+        print(f"Total Number of contacts in your phonebook: {count[0]}")
 
     def delete(self, name):
         """
