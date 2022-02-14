@@ -10,8 +10,8 @@ contact_book = ContactManager()
 controls = {
     "save": contact_book.save,
     "delete" : contact_book.delete,
-    "display" : contact_book.show_all,
-    "retrieve" : contact_book.show,
+    "all contacts" : contact_book.show_all,
+    "show" : contact_book.show,
     "edit" : contact_book.update,
     "count" : contact_book.count_all,
 }
@@ -33,20 +33,18 @@ while proceed:
         elif action == "delete":
             name = input("Enter name of contact you want to delete: ")
             execute = controls[action]
-            execute(name)
+            execute(conn, cursor, name)
         elif action == "display":
             execute = controls[action]
             execute(cursor)
-        elif action == "retrieve":
+        elif action == "show":
             name = input("Enter name of contact you'd like to retrieve: ")
             execute = controls[action]
             execute(cursor, name)
         elif action == "edit":
             name = input("Enter name of contact you'd like to edit: ")
-            new_name = input("Set new name: ")
-            new_email = input("Set new email: ")
             execute = controls[action]
-            execute(name, new_email, new_email)
+            execute(conn, cursor, name)
         elif action == "count":
             execute = controls[action]
             execute(cursor)
