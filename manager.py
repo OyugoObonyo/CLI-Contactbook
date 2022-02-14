@@ -3,6 +3,7 @@ A module that consists of the contact manager class
 """
 from tabulate import tabulate
 from helpers import check_db
+from sqlite3 import IntegrityError
 
 
 class ContactManager:
@@ -17,11 +18,15 @@ class ContactManager:
         @contact: name of contact to be saved
         @email: email of contact to be saved
         """
-        if name == "" or email == "":
-            print("Name or email cannot be empty")
+        try:
+            if name == "" or email == "":
+                print("Name or email cannot be empty")
+                return None
+            cursor.execute("INSERT INTO contacts VALUES(NULL,?, ?)",(name, email))
+            conn.commit()
+        except IntegrityError:
+            print("A contact with a similar name or email already exists")
             return None
-        cursor.execute("INSERT INTO contacts VALUES(NULL,?, ?)",(name, email))
-        conn.commit()
         print(f"{name} has been added to your phonebook!")
 
     def show(self, cursor, name):
@@ -49,6 +54,9 @@ class ContactManager:
         @conn: db connection cursor
         """
         contacts = cursor.execute("SELECT * FROM contacts").fetchall()
+        if contacts == []:
+            print("You haven't saved any contact yet")
+            return None
         print(tabulate(contacts, headers=["ContactID", "Name", "Email"]))
 
     def update(self, conn, cursor, name):
