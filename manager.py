@@ -1,9 +1,8 @@
 """
 A module that consists of the contact manager class
 """
-from itertools import count
-from helpers import create_db
 from tabulate import tabulate
+from helpers import check_db
 
 
 class ContactManager:
@@ -31,6 +30,12 @@ class ContactManager:
         @cursor: db cursor object
         @name: name of contact to be displayed
         """
+        if name == "":
+            print("Name cannot be empty")
+            return None
+        check = check_db(cursor=cursor, name=name)
+        if check == 1:
+            return None
         # append comma after name to make it a tuple
         contact = cursor.execute("SELECT * FROM contacts WHERE name = ?", (name, )).fetchall()
         if contact == []:
@@ -46,14 +51,27 @@ class ContactManager:
         contacts = cursor.execute("SELECT * FROM contacts").fetchall()
         print(tabulate(contacts, headers=["ContactID", "Name", "Email"]))
 
-    def update(self, name, new_name, new_email):
+    def update(self, conn, cursor, name):
         """
         updates a particular contact in the db
+        @cursor: cursor object
         @name: name of contact to be updated
         @new_name: new contact name
         @new_email: new contact email
         """
-        print("number is updated!")
+        if name == "":
+            print("Name cannot be empty")
+            return None
+        check = check_db(cursor=cursor, name=name)
+        if check == 1:
+            return None
+        new_name = input("Set new name: ")
+        new_email = input("Set new email: ")
+        query = "UPDATE contacts SET name = ?, email = ? WHERE name = ?"
+        args = (new_name, new_email, name)
+        cursor.execute(query, args)
+        conn.commit()
+        print("Contact updated!")
 
     def count_all(self, cursor):
         """
@@ -63,9 +81,19 @@ class ContactManager:
         count = cursor.execute("SELECT COUNT(*) FROM contacts").fetchone()
         print(f"Total Number of contacts in your phonebook: {count[0]}")
 
-    def delete(self, name):
+    def delete(self, conn, cursor, name):
         """
         delete - deletes a contact from the database
         @name: name of contact to be deleted from db
         """
-        print("number is deleted!")
+        if name == "":
+            print("Name cannot be empty")
+            return None
+        check = check_db(cursor=cursor, name=name)
+        if check == 1:
+            return None
+        query = "DELETE FROM contacts WHERE name = ?"
+        args = (name, )
+        cursor.execute(query, args)
+        conn.commit()
+        print(f"{name} has been deleted from your phonebook!")
