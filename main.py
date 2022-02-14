@@ -34,7 +34,7 @@ while proceed:
             name = input("Enter name of contact you want to delete: ")
             execute = controls[action]
             execute(conn, cursor, name)
-        elif action == "display":
+        elif action == "all contacts":
             execute = controls[action]
             execute(cursor)
         elif action == "show":
