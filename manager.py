@@ -25,12 +25,18 @@ class ContactManager:
         conn.commit()
         print(f"{name} has been added to your phonebook!")
 
-    def show(self, conn, name):
+    def show(self, cursor, name):
         """
         show - shows a particular contact detail
+        @cursor: db cursor object
         @name: name of contact to be displayed
         """
-        print("Here is the number!")
+        # append comma after name to make it a tuple
+        contact = cursor.execute("SELECT * FROM contacts WHERE name = ?", (name, )).fetchall()
+        if contact == []:
+            print(f"{name} is not in your contactbook")
+        else:
+            print(tabulate(contact, headers=["ContactID", "Name", "Email" ]))
 
     def show_all(self, cursor):
         """
