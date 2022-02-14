@@ -26,11 +26,14 @@ def create_db():
     """)
     return conn
 
-def check_db(conn, name):
+def check_db(cursor, name):
     """
     check_db - checks if a particular name is present in the db
     Return: true if name is in db and false if not
     """
-    conn.execute("""
-    """)
+    result = cursor.execute("SELECT * FROM contacts WHERE name = ?", (name, )).fetchone()
+    if result is None:
+        print(f"{name} is not saved in your phonebook")
+        return 1
+    return 0 
     
